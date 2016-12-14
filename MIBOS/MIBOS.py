@@ -34,7 +34,7 @@ class MIBOS(Model):
         res = [rec[attr] for rec in cur]
         return res
 
-    def k_CMI(self, K=8):
+    def mibos(self, K=8):
 
         def match(s1, s2):
             return 1 if s1 == s2 else 0
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     cv12 = CountVectorizer(dtype='int16', stop_words='english')
     knn = MIBOS(db1, cv12, JOURNAL, queryfilter)
 
-    knn.k_CMI(100)
+    knn.mibos(100)
 
     MAS = []
 
