@@ -191,17 +191,56 @@ def movie(cv, tau, prec, q=1.0):
     titles_train = model.extract(TRAIN, 'title')
     actors_train = model.extract(TRAIN, 'actors')
     director_train = model.extract(TRAIN, 'director')
-    at_train = [a + ' ' + d + ' ' for (a, d, t) in zip(actors_train, director_train, titles_train)]
+    at_train = [a + ' ' + d + ' ' + t for (a, d, t) in zip(actors_train, director_train, titles_train)]
 
     titles_valid = model.extract(VALID, 'title')
     actors_valid = model.extract(VALID, 'actors')
     director_valid = model.extract(VALID, 'director')
-    at_valid = [a + ' ' + d + ' ' for (a, d, t) in zip(actors_valid, director_valid, titles_valid)]
+    at_valid = [a + ' ' + d + ' ' + t for (a, d, t) in zip(actors_valid, director_valid, titles_valid)]
 
     titles_test = model.extract(TEST, 'title')
     actors_test = model.extract(TEST, 'actors')
     director_test = model.extract(TEST, 'director')
-    at_test = [a + ' ' + d + ' ' for (a, d, t) in zip(actors_test, director_test, titles_test)]
+    at_test = [a + ' ' + d + ' ' + t for (a, d, t) in zip(actors_test, director_test, titles_test)]
+
+    X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
+    y_train = model.extract(TRAIN, 'lbl')
+    y_valid = model.extract(VALID, 'lbl')
+    y_test = model.extract(TEST, 'lbl')
+
+    model.training(X_train, y_train)
+
+    prec_range = np.arange(.8, .96, .05)
+    # prec_range = np.arange(.6, .76, .05)
+
+    q_range = np.arange(1.0, 2.1, 0.5)
+    tau_range = np.arange(1, 6)
+
+    for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
+        model._update(prec, q, tau)
+        model.validating(X_valid, y_valid)
+        res, row_index, res2 = model.inference(X_test, y_test)
+        # print('testing: {0}/{1}'.format(res, res2))
+
+
+def restaurant(cv, tau, prec, q=1.0):
+    db = client['restaurant']
+    model = Collective2(db, cv=cv, tau=tau, prec=prec, q=q)
+
+    type_train = model.extract(TRAIN, 'type')
+    city_train = model.extract(TRAIN, 'city')
+    name_train = model.extract(TRAIN, 'name')
+    at_train = [str(a) + ' ' + str(d) + ' ' + t for (a, d, t) in zip(city_train, name_train, type_train)]
+
+    type_valid = model.extract(VALID, 'type')
+    city_valid = model.extract(VALID, 'city')
+    name_valid = model.extract(VALID, 'name')
+    at_valid = [a + ' ' + d + ' ' + t for (a, d, t) in zip(city_valid, name_valid, type_valid)]
+
+    type_test = model.extract(TEST, 'type')
+    city_test = model.extract(TEST, 'city')
+    name_test = model.extract(TEST, 'name')
+    at_test = [a + ' ' + d + ' ' + t for (a, d, t) in zip(city_test, name_test, type_test)]
 
     X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
     y_train = model.extract(TRAIN, 'lbl')
@@ -251,8 +290,8 @@ if __name__ == "__main__":
     try:
         for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
             print(prec, q, tau)
-            # res, res2 = movie(cv22, tau=tau, prec=prec, q=q)
-            res, res2 = dblp(cv12, tau=tau, prec=prec, q=q)
+            # res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
+            res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
             print('tau = {0}'.format(tau))
             nomatch = nomatch + res2[1][0]
             match = match + res2[1][1]
