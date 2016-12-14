@@ -230,17 +230,17 @@ def restaurant(cv, tau, prec, q=1.0):
     type_train = model.extract(TRAIN, 'type')
     city_train = model.extract(TRAIN, 'city')
     name_train = model.extract(TRAIN, 'name')
-    at_train = [str(a) + ' ' + str(d) + ' ' + t for (a, d, t) in zip(city_train, name_train, type_train)]
+    at_train = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_train, name_train, type_train)]
 
     type_valid = model.extract(VALID, 'type')
     city_valid = model.extract(VALID, 'city')
     name_valid = model.extract(VALID, 'name')
-    at_valid = [a + ' ' + d + ' ' + t for (a, d, t) in zip(city_valid, name_valid, type_valid)]
+    at_valid = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_valid, name_valid, type_valid)]
 
     type_test = model.extract(TEST, 'type')
     city_test = model.extract(TEST, 'city')
     name_test = model.extract(TEST, 'name')
-    at_test = [a + ' ' + d + ' ' + t for (a, d, t) in zip(city_test, name_test, type_test)]
+    at_test = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_test, name_test, type_test)]
 
     X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
     y_train = model.extract(TRAIN, 'lbl')
