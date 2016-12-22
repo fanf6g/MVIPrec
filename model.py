@@ -1,5 +1,6 @@
 import logging
 
+import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 
 logging.basicConfig(level=logging.DEBUG,
@@ -12,6 +13,9 @@ class Model:
     def __init__(self, db, cv=CountVectorizer(dtype='int16')):
         self.db = db
         self.cv = cv
+
+    def delta(self, n_sample, d_H, eta):
+        return np.sqrt(1.0 / n_sample * (d_H * (np.log(2 * n_sample / d_H) + 1) - np.log(eta / 4)))
 
     def extract(self, tbl_name, col):
         '''
@@ -37,10 +41,10 @@ class Model:
         self.cv.fit(texts_train)
         vocab_train = self.cv.vocabulary_
 
-        tmpcv_valid = CountVectorizer(max_df=self.cv.max_df, ngram_range=self.cv.ngram_range, dtype=self.cv.dtype)
+        tmpcv_valid = CountVectorizer(ngram_range=self.cv.ngram_range, dtype=self.cv.dtype)
         vocab_valid = tmpcv_valid.fit(texts_valid).vocabulary_
 
-        tmpcv_test = CountVectorizer(max_df=self.cv.max_df, ngram_range=self.cv.ngram_range, dtype=self.cv.dtype)
+        tmpcv_test = CountVectorizer(ngram_range=self.cv.ngram_range, dtype=self.cv.dtype)
         vocab_test = tmpcv_test.fit(texts_test).vocabulary_
 
         vocab_valid_test = set(vocab_valid.keys()).union(vocab_test.keys())
