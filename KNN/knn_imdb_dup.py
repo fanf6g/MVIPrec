@@ -90,7 +90,7 @@ if __name__ == "__main__":
     knn.shuffle_label()
     knn.split(train_count=60000, valid_count=7500, test_count=7500)
 
-    knn.knn_pred(50)
+    knn.knn_pred(1)
     knn.knn_verify()
 
     pass

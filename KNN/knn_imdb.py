@@ -1,5 +1,4 @@
 import logging
-import random
 
 import numpy as np
 import pymongo
@@ -77,8 +76,8 @@ class KNN_imdb(KNN):
 
         freq_recs = [rec for rec in univ_list if rec[self.attr] in top_K_attr]
 
-        random.seed(17)
-        random.shuffle(freq_recs)
+        # random.seed(17)
+        # random.shuffle(freq_recs)
 
         for rec in freq_recs[0:n_samples]:
             rec.pop(ID)
@@ -142,14 +141,14 @@ class KNN_imdb(KNN):
 if __name__ == "__main__":
     client = pymongo.MongoClient('localhost', 27017)
     db1 = client['movies']
-    cv12 = CountVectorizer(dtype='int16', stop_words='english')
-    knn = KNN_imdb(db1, cv12, PRODUCER, queryfilter)
+    cv12 = CountVectorizer(ngram_range=(1, 2), dtype='int16', stop_words='english')
+    knn = KNN_imdb(db1, cv12, GENRES, queryfilter)
     knn.clean()
     knn.sampling()
     knn.shuffle_label()
     knn.split(train_count=40000, valid_count=5000, test_count=5000)
 
-    knn.knn_pred(50)
+    knn.knn_pred(1)
     knn.knn_verify()
 
     pass

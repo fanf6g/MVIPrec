@@ -16,6 +16,7 @@ ID = '_id'
 
 NAME = 'name'
 CITY = 'city'
+ADDR = 'addr'
 TYPE = 'type'
 
 LBL = 'lbl'
@@ -56,18 +57,22 @@ class KNN_restaurant(KNN):
         tmp = self.db.dblptmp
 
         records = []
+        cities = []
 
         cur = dblp.find(self.queryfilter)
+
         for rec in cur:
             del rec['_id']
-            str_num = rec[LBL]
-            int_num = int(''.join(filter(lambda x: x.isdigit(), str_num)))
-            rec[LBL] = int_num
+            cities.append(rec[CITY])
             records.append(rec)
+
+        city2lbl = [(c, i) for (i, c) in enumerate(sorted(set(cities)))]
+        city2dict = dict(city2lbl)
 
         random.seed(seed)
         random.shuffle(records)
         for rec in records:
+            rec[LBL] = city2dict[rec[CITY]]
             tmp.insert(rec)
 
     def knn_pred(self, K=1):
@@ -76,23 +81,24 @@ class KNN_restaurant(KNN):
         valid = self.db.valid
 
         train_type = self._extract(train, TYPE)
-        train_city = self._extract(train, CITY)
+        train_city = self._extract(train, ADDR)
         train_name = self._extract(train, NAME)
-        train_at = [str(a) + ' ' + str(t) + ' ' + str(d) for (a, t, d) in
+        train_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
                     zip(train_name, train_type, train_city)]
         train_label = self._extract(train, LBL)
 
         valid_type = self._extract(valid, TYPE)
-        valid_city = self._extract(valid, CITY)
+        valid_city = self._extract(valid, ADDR)
         valid_name = self._extract(valid, NAME)
-        valid_at = [str(a) + ' ' + str(t) + ' ' + str(d) for (a, t, d) in
+        valid_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
                     zip(valid_name, valid_type, valid_city)]
         valid_label = self._extract(valid, LBL)
 
         test_type = self._extract(test, TYPE)
-        test_city = self._extract(test, CITY)
+        test_city = self._extract(test, ADDR)
         test_name = self._extract(test, NAME)
-        test_at = [str(a) + ' ' + str(t) + ' ' + str(d) for (a, t, d) in zip(test_name, test_type, test_city)]
+        test_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
+                   zip(test_name, test_type, test_city)]
         test_label = self._extract(test, LBL)
 
         at = []
@@ -128,6 +134,7 @@ class KNN_restaurant(KNN):
 
 
 if __name__ == "__main__":
+    LBL = 'lbl'
     client = pymongo.MongoClient('localhost', 27017)
     db1 = client['restaurant']
     cv12 = CountVectorizer(dtype='int16', stop_words='english')
