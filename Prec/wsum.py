@@ -101,6 +101,7 @@ class Collective2(Model):
                     # print(N_tp / N_h)
 
                 if (N_tp / N_h < self.prec and N_h > 100):
+                    N_h = N_h - 1
                     break
                 else:
                     theta_tmp = Z[Z_idx[i]]
@@ -171,8 +172,8 @@ def dblp(cv, tau, prec, q=1.0):
 
     model.training(X_train, y_train)
 
-    prec_range = np.arange(.85, .96, .05)
-    # prec_range = np.arange(.2, .36, .05)
+    prec_range = np.arange(.85, .96, .05) + model.delta(45000, 2, 0.1)
+    # prec_range = np.arange(.2, .36, .05)+ model.delta(45000, 2, 0.1)
 
     q_range = np.arange(1.0, 2.1, 0.5)
     tau_range = np.arange(1, 6)
@@ -188,20 +189,20 @@ def movie(cv, tau, prec, q=1.0):
     db = client['movies']
     model = Collective2(db, cv=cv, tau=tau, prec=prec, q=q)
 
-    titles_train = model.extract(TRAIN, 'title')
+    # titles_train = model.extract(TRAIN, 'title')
     actors_train = model.extract(TRAIN, 'actors')
     director_train = model.extract(TRAIN, 'director')
-    at_train = [a + ' ' + d + ' ' + t for (a, d, t) in zip(actors_train, director_train, titles_train)]
+    at_train = [a + ' ' + d for (a, d) in zip(actors_train, director_train)]
 
-    titles_valid = model.extract(VALID, 'title')
+    # titles_valid = model.extract(VALID, 'title')
     actors_valid = model.extract(VALID, 'actors')
     director_valid = model.extract(VALID, 'director')
-    at_valid = [a + ' ' + d + ' ' + t for (a, d, t) in zip(actors_valid, director_valid, titles_valid)]
+    at_valid = [a + ' ' + d for (a, d) in zip(actors_valid, director_valid)]
 
-    titles_test = model.extract(TEST, 'title')
+    # titles_test = model.extract(TEST, 'title')
     actors_test = model.extract(TEST, 'actors')
     director_test = model.extract(TEST, 'director')
-    at_test = [a + ' ' + d + ' ' + t for (a, d, t) in zip(actors_test, director_test, titles_test)]
+    at_test = [a + ' ' + d for (a, d) in zip(actors_test, director_test)]
 
     X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
     y_train = model.extract(TRAIN, 'lbl')
@@ -210,11 +211,11 @@ def movie(cv, tau, prec, q=1.0):
 
     model.training(X_train, y_train)
 
-    prec_range = np.arange(.8, .96, .05)
-    # prec_range = np.arange(.6, .76, .05)
+    prec_range = np.arange(.0, .1, .05) + model.delta(45000, 2, 0.1)
+    # prec_range = np.arange(.6, .76, .05)+ model.delta(45000, 2, 0.1)
 
-    q_range = np.arange(1.0, 2.1, 0.5)
-    tau_range = np.arange(1, 6)
+    q_range = np.arange(1.0, 1.1, 0.5)
+    tau_range = np.arange(1, 2)
 
     for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
         model._update(prec, q, tau)
@@ -265,7 +266,7 @@ def restaurant(cv, tau, prec, q=1.0):
 if __name__ == "__main__":
     # dblp()
     # cv11 = CountVectorizer(min_df=1, max_df=0.5, ngram_range=(1, 1), dtype='int16', stop_words='english')
-    cv12 = CountVectorizer(min_df=1, max_df=0.5, ngram_range=(1, 2), dtype='int16', stop_words='english')
+    cv12 = CountVectorizer(ngram_range=(1, 2), dtype='int16', stop_words='english')
     # cv21 = CountVectorizer(min_df=2, max_df=0.5, ngram_range=(1, 1), dtype='int16', stop_words='english')
     # cv22 = CountVectorizer(min_df=2, max_df=0.5, ngram_range=(1, 2), dtype='int16', stop_words='english')
 
@@ -290,8 +291,9 @@ if __name__ == "__main__":
     try:
         for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
             print(prec, q, tau)
-            # res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
-            res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
+            # res, res2 = dblp(cv12, tau=tau, prec=prec, q=q)
+            res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
+            # res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
             print('tau = {0}'.format(tau))
             nomatch = nomatch + res2[1][0]
             match = match + res2[1][1]

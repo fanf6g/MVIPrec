@@ -149,58 +149,6 @@ class Collective_opt(Model):
         return res, row_index, res2
 
 
-def dblp(cv, tau, prec, q=1.0):
-    db = client['accuracy']
-    model = Collective_opt(db, cv=cv, tau=tau, prec=prec, q=q)
-
-    titles_train = model.extract(TRAIN, 'title')
-    author_train = model.extract(TRAIN, 'author')
-    at_train = [a + ' ' + t for (a, t) in zip(author_train, titles_train)]
-
-    titles_valid = model.extract(VALID, 'title')
-    author_valid = model.extract(VALID, 'author')
-    at_valid = [a + ' ' + t for (a, t) in zip(titles_valid, author_valid)]
-
-    titles_test = model.extract(TEST, 'title')
-    author_test = model.extract(TEST, 'author')
-    at_test = [a + ' ' + t for (a, t) in zip(author_test, titles_test)]
-
-    # X_train, X_test = model.featuring(titles_train, titles_test),
-    X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
-    y_train = model.extract(TRAIN, 'lbl')
-    y_valid = model.extract(VALID, 'lbl')
-    y_test = model.extract(TEST, 'lbl')
-
-    model.training(X_train, y_train)
-
-    prec_range = np.arange(.8, 1, 0.05)  # + model.delta(45000, 2, 0.9)
-    # prec_range = [0.0]
-    # prec_range = np.arange(.2, .36, .05) + model.delta(45000, 2, 0.1)
-
-    q_range = np.arange(1.0, 3.1, 0.5)
-    tau_range = np.arange(1, 6)
-
-    for prec in prec_range:
-        l_model = []
-        for (q, tau) in itertools.product(q_range, tau_range):
-            model._update(prec, q, tau)
-            model.validating(X_valid, y_valid)
-            m = []
-            m.extend((prec, q))
-            m.extend(model.opt_model)
-            l_model.append(m)
-            # print(m)
-            # res, row_index, res2 = model.inference(X_test, y_test)
-            # print('testing: {0}/{1}'.format(res, res2))
-
-        df = pd.DataFrame(l_model, columns=('prec', 'q', 'tau', 'theta', 'tp', 'N'))
-        opt = np.argmax(df['tp'])
-        model._update(df.iloc[opt]['prec'], df.iloc[opt]['q'], df.iloc[opt]['tau'])
-        model.theta = df.iloc[opt]['theta']
-        model.opt_model = (df.iloc[opt]['tau'], df.iloc[opt]['theta'], df.iloc[opt]['tp'], df.iloc[opt]['N'])
-        model.inference(X_test, y_test)
-
-
 def movie(cv, tau, prec, q=1.0):
     db = client['movies']
     model = Collective_opt(db, cv=cv, tau=tau, prec=prec, q=q)
@@ -227,61 +175,8 @@ def movie(cv, tau, prec, q=1.0):
 
     model.training(X_train, y_train)
 
-    prec_range = np.arange(.8, .96, .05) + model.delta(45000, 2, 0.1)
-    # prec_range = np.arange(.6, .76, .05) + model.delta(45000, 2, 0.9)
-
-    q_range = np.arange(1.0, 3.1, 0.5)
-    tau_range = np.arange(1, 6)
-
-    for prec in prec_range:
-        l_model = []
-        for (q, tau) in itertools.product(q_range, tau_range):
-            model._update(prec, q, tau)
-            model.validating(X_valid, y_valid)
-            m = []
-            m.extend((prec, q))
-            m.extend(model.opt_model)
-            l_model.append(m)
-            # print(m)
-            # res, row_index, res2 = model.inference(X_test, y_test)
-            # print('testing: {0}/{1}'.format(res, res2))
-
-        df = pd.DataFrame(l_model, columns=('prec', 'q', 'tau', 'theta', 'tp', 'N'))
-        opt = np.argmax(df['tp'])
-        model._update(df.iloc[opt]['prec'], df.iloc[opt]['q'], df.iloc[opt]['tau'])
-        model.theta = df.iloc[opt]['theta']
-        model.opt_model = (df.iloc[opt]['tau'], df.iloc[opt]['theta'], df.iloc[opt]['tp'], df.iloc[opt]['N'])
-        model.inference(X_test, y_test)
-
-
-def restaurant(cv, tau, prec, q=1.0):
-    db = client['restaurant']
-    model = Collective_opt(db, cv=cv, tau=tau, prec=prec, q=q)
-
-    type_train = model.extract(TRAIN, 'type')
-    city_train = model.extract(TRAIN, 'city')
-    name_train = model.extract(TRAIN, 'name')
-    at_train = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_train, name_train, type_train)]
-
-    type_valid = model.extract(VALID, 'type')
-    city_valid = model.extract(VALID, 'city')
-    name_valid = model.extract(VALID, 'name')
-    at_valid = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_valid, name_valid, type_valid)]
-
-    type_test = model.extract(TEST, 'type')
-    city_test = model.extract(TEST, 'city')
-    name_test = model.extract(TEST, 'name')
-    at_test = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_test, name_test, type_test)]
-
-    X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
-    y_train = model.extract(TRAIN, 'lbl')
-    y_valid = model.extract(VALID, 'lbl')
-    y_test = model.extract(TEST, 'lbl')
-
-    model.training(X_train, y_train)
-
-    prec_range = np.arange(.8, .96, .05)
-    # prec_range = np.arange(.6, .76, .05)
+    prec_range = np.arange(.8, .96, .05)  # + model.delta(45000, 2, 0.9)
+    # prec_range = np.arange(.6, .76, .05)  # + model.delta(45000, 2, 0.1)
 
     q_range = np.arange(1.0, 3.1, 0.5)
     tau_range = np.arange(1, 6)
@@ -336,8 +231,7 @@ if __name__ == "__main__":
         for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
             print(prec, q, tau)
             res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
-            # res, res2 = dblp(cv12, tau=tau, prec=prec, q=q)
-            # res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
+
             print('tau = {0}'.format(tau))
             nomatch = nomatch + res2[1][0]
             match = match + res2[1][1]
