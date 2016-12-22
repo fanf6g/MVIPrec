@@ -1,0 +1,5 @@
+prec = 0.8	 q = 1.0	 tau = 5.0	 opt_model=(5.0, 0.44018907693558207, 3395.0, 4243.0)	 p1=(array([False,  True], dtype=bool), array([1240, 3724]))	 p2=(array([False,  True], dtype=bool), array([ 843, 3435]))
+prec = 0.8500000000000001	 q = 1.0	 tau = 5.0	 opt_model=(5.0, 0.83538925963989141, 3234.0, 3804.0)	 p1=(array([False,  True], dtype=bool), array([1240, 3724]))	 p2=(array([False,  True], dtype=bool), array([ 572, 3258]))
+prec = 0.9000000000000001	 q = 1.0	 tau = 5.0	 opt_model=(5.0, 0.9894678130659611, 2822.0, 3135.0)	 p1=(array([False,  True], dtype=bool), array([1240, 3724]))	 p2=(array([False,  True], dtype=bool), array([ 328, 2839]))
+prec = 0.9500000000000002	 q = 3.0	 tau = 5.0	 opt_model=(5.0, 0.99903235124891299, 2184.0, 2298.0)	 p1=(array([False,  True], dtype=bool), array([1308, 3656]))	 p2=(array([False,  True], dtype=bool), array([ 113, 2176]))
+

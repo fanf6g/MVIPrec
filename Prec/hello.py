@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -43,13 +45,13 @@ def dump(f_input, f_output):
 
 
 if __name__ == '__main__':
-    # fin_list = os.listdir('.')
-    #
-    # for f in fin_list:
-    #     fin = os.path.splitext(f)
-    #     if fin[1] == '.txt':
-    #         fout = fin[0] + '.csv'
-    #         dump(f, fout)
+    fin_list = os.listdir('.')
+
+    for f in fin_list:
+        fin = os.path.splitext(f)
+        if fin[1] == '.txt':
+            fout = fin[0] + '.csv'
+            dump(f, fout)
 
     # fin_list = ['journal_opt.txt', 'year_opt_delta.txt', 'producer_opt.txt', 'genres_opt.txt',
     #             'restaurant_opt_delta.txt']

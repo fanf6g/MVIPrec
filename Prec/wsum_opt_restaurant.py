@@ -176,7 +176,7 @@ def restaurant(cv, tau, prec, q=1.0):
     model.training(X_train, y_train)
 
     # prec_range = np.arange(.8, .96, .05)
-    prec_range = np.arange(.6, .76, .05)
+    prec_range = np.arange(.65, .81, .05)
 
     q_range = np.arange(1.0, 3.1, 0.5)
     tau_range = np.arange(1, 6)
