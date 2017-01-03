@@ -81,24 +81,24 @@ class KNN_restaurant(KNN):
         valid = self.db.valid
 
         train_type = self._extract(train, TYPE)
-        train_city = self._extract(train, ADDR)
+        train_addr = self._extract(train, ADDR)
         train_name = self._extract(train, NAME)
-        train_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
-                    zip(train_name, train_type, train_city)]
+        train_at = [str(n) + ' ' + str(t) + ' ' + str(a) for (n, t, a) in
+                    zip(train_name, train_type, train_addr)]
         train_label = self._extract(train, LBL)
 
         valid_type = self._extract(valid, TYPE)
-        valid_city = self._extract(valid, ADDR)
+        valid_addr = self._extract(valid, ADDR)
         valid_name = self._extract(valid, NAME)
-        valid_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
-                    zip(valid_name, valid_type, valid_city)]
+        valid_at = [str(n) + ' ' + str(t) + ' ' + str(a) for (n, t, a) in
+                    zip(valid_name, valid_type, valid_addr)]
         valid_label = self._extract(valid, LBL)
 
         test_type = self._extract(test, TYPE)
-        test_city = self._extract(test, ADDR)
+        test_addr = self._extract(test, ADDR)
         test_name = self._extract(test, NAME)
-        test_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
-                   zip(test_name, test_type, test_city)]
+        test_at = [str(n) + ' ' + str(t) + ' ' + str(a) for (n, t, a) in
+                   zip(test_name, test_type, test_addr)]
         test_label = self._extract(test, LBL)
 
         at = []
