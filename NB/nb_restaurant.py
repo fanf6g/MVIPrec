@@ -24,6 +24,7 @@ LBL = 'lbl'
 NAME = 'name'
 CITY = 'city'
 TYPE = 'type'
+ADDR = 'addr'
 
 
 class NB(Model):
@@ -135,22 +136,22 @@ def restaurant(cv=CountVectorizer(dtype='int16'), alpha=1.0e-8):
     model = NB(db, cv=cv, alpha=alpha)
 
     train_type = model.extract(TRAIN, TYPE)
-    train_city = model.extract(TRAIN, CITY)
+    train_addr = model.extract(TRAIN, ADDR)
     train_name = model.extract(TRAIN, NAME)
-    train_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
-                zip(train_name, train_type, train_city)]
+    train_at = [str(n) + ' ' + str(t) + ' ' + str(a) for (n, t, a) in
+                zip(train_name, train_type, train_addr)]
 
     valid_type = model.extract(VALID, TYPE)
-    valid_city = model.extract(VALID, CITY)
+    valid_addr = model.extract(VALID, ADDR)
     valid_name = model.extract(VALID, NAME)
-    valid_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
-                zip(valid_name, valid_type, valid_city)]
+    valid_at = [str(n) + ' ' + str(t) + ' ' + str(a) for (n, t, a) in
+                zip(valid_name, valid_type, valid_addr)]
 
     test_type = model.extract(TEST, TYPE)
-    test_city = model.extract(TEST, CITY)
+    test_addr = model.extract(TEST, ADDR)
     test_name = model.extract(TEST, NAME)
-    test_at = [str(n) + ' ' + str(t) + ' ' + str(c) for (n, t, c) in
-               zip(test_name, test_type, test_city)]
+    test_at = [str(n) + ' ' + str(t) + ' ' + str(a) for (n, t, a) in
+               zip(test_name, test_type, test_addr)]
 
     X_train, X_valid, X_test = model.featuring(train_at, valid_at, test_at)
     y_train = model.extract(TRAIN, LBL)
