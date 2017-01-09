@@ -142,13 +142,13 @@ if __name__ == "__main__":
     client = pymongo.MongoClient('localhost', 27017)
     db1 = client['movies']
     cv12 = CountVectorizer(ngram_range=(1, 2), dtype='int16', stop_words='english')
-    knn = KNN_imdb(db1, cv12, GENRES, queryfilter)
+    knn = KNN_imdb(db1, cv12, PRODUCER, queryfilter)
     knn.clean()
     knn.sampling()
     knn.shuffle_label()
     knn.split(train_count=40000, valid_count=5000, test_count=5000)
 
-    knn.knn_pred(1)
-    knn.knn_verify()
+    # knn.knn_pred(1)
+    # knn.knn_verify()
 
     pass

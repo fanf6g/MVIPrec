@@ -55,18 +55,18 @@ class Round(Model):
         self.cities_test = list(map(lambda x: str(x), cities_test))
         self.names_test = list(map(lambda x: str(x), names_test))
         self.addrs_test = list(map(lambda x: str(x), addrs_test))
-        self.types_test = list(map(lambda x: str(x), types_test))
+        # self.types_test = list(map(lambda x: str(x), types_test))
 
         Nghb_name_test_train = self._edit_dist(self.names_train, self.names_test) <= 10
         Nghb_addr_test_train = self._edit_dist(self.addrs_train, self.addrs_test) <= 7
-        Nghb_type_test_train = self._edit_dist(self.types_train, self.types_test) <= 5
+        # Nghb_type_test_train = self._edit_dist(self.types_train, self.types_test) <= 5
 
         Nghb_name_test_test = self._edit_dist(self.names_test, self.names_test) <= 10
         Nghb_addr_test_test = self._edit_dist(self.names_test, self.addrs_test) <= 7
-        Nghb_type_test_test = self._edit_dist(self.names_test, self.types_test) <= 5
+        # Nghb_type_test_test = self._edit_dist(self.names_test, self.types_test) <= 5
 
-        Nghb_test_train = np.array(Nghb_name_test_train * Nghb_addr_test_train * Nghb_type_test_train)
-        Nghb_test_test = Nghb_name_test_test * Nghb_addr_test_test * Nghb_type_test_test
+        Nghb_test_train = np.array(Nghb_name_test_train * Nghb_addr_test_train)
+        Nghb_test_test = Nghb_name_test_test * Nghb_addr_test_test
 
         cities = np.array(sorted(set(self.cities_train)))
         n_lbl = len(cities)

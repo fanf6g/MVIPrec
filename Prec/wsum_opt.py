@@ -101,7 +101,7 @@ class Collective_opt(Model):
                     N_tp = N_tp + 1
                     # print(N_tp / N_h)
 
-                if (N_tp / N_h < self.prec and N_h > 40):
+                if (N_tp / N_h < self.prec and N_h > 20):
                     N_h = N_h - 1
                     break
                 else:
@@ -173,11 +173,11 @@ def dblp(cv, tau, prec, q=1.0):
 
     model.training(X_train, y_train)
 
-    prec_range = np.arange(.8, 1, 0.05)  # + model.delta(45000, 2, 0.9)
+    # prec_range = np.arange(.8, 0.96, 0.05) + model.delta(45000, 2, 0.1)
     # prec_range = [0.0]
-    # prec_range = np.arange(.2, .36, .05) + model.delta(45000, 2, 0.1)
+    prec_range = np.arange(.2, .36, .05) + model.delta(45000, 2, 0.1)
 
-    q_range = np.arange(1.0, 3.1, 0.5)
+    q_range = np.arange(1.0, 3.0, 0.5)
     tau_range = np.arange(1, 6)
 
     for prec in prec_range:
@@ -228,9 +228,9 @@ def movie(cv, tau, prec, q=1.0):
     model.training(X_train, y_train)
 
     prec_range = np.arange(.8, .96, .05) + model.delta(45000, 2, 0.1)
-    # prec_range = np.arange(.6, .76, .05) + model.delta(45000, 2, 0.9)
+    # prec_range = np.arange(.6, .76, .05) + model.delta(45000, 2, 0.1)
 
-    q_range = np.arange(1.0, 3.1, 0.5)
+    q_range = np.arange(1.0, 3.0, 0.5)
     tau_range = np.arange(1, 6)
 
     for prec in prec_range:
@@ -259,17 +259,17 @@ def restaurant(cv, tau, prec, q=1.0):
     model = Collective_opt(db, cv=cv, tau=tau, prec=prec, q=q)
 
     type_train = model.extract(TRAIN, 'type')
-    city_train = model.extract(TRAIN, 'city')
+    city_train = model.extract(TRAIN, 'addr')
     name_train = model.extract(TRAIN, 'name')
     at_train = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_train, name_train, type_train)]
 
     type_valid = model.extract(VALID, 'type')
-    city_valid = model.extract(VALID, 'city')
+    city_valid = model.extract(VALID, 'addr')
     name_valid = model.extract(VALID, 'name')
     at_valid = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_valid, name_valid, type_valid)]
 
     type_test = model.extract(TEST, 'type')
-    city_test = model.extract(TEST, 'city')
+    city_test = model.extract(TEST, 'addr')
     name_test = model.extract(TEST, 'name')
     at_test = [str(a) + ' ' + str(d) + ' ' + str(t) for (a, d, t) in zip(city_test, name_test, type_test)]
 
@@ -280,7 +280,7 @@ def restaurant(cv, tau, prec, q=1.0):
 
     model.training(X_train, y_train)
 
-    prec_range = np.arange(.8, .96, .05)
+    prec_range = np.arange(.7, .86, .05)
     # prec_range = np.arange(.6, .76, .05)
 
     q_range = np.arange(1.0, 3.1, 0.5)
@@ -308,6 +308,7 @@ def restaurant(cv, tau, prec, q=1.0):
 
 
 if __name__ == "__main__":
+    logging.info('starting')
     # dblp()
     # cv11 = CountVectorizer(min_df=1, max_df=0.5, ngram_range=(1, 1), dtype='int16', stop_words='english')
     cv12 = CountVectorizer(ngram_range=(1, 2), dtype='int16', stop_words='english')
@@ -335,9 +336,9 @@ if __name__ == "__main__":
     try:
         for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
             print(prec, q, tau)
-            res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
+            # res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
             # res, res2 = dblp(cv12, tau=tau, prec=prec, q=q)
-            # res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
+            res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
             print('tau = {0}'.format(tau))
             nomatch = nomatch + res2[1][0]
             match = match + res2[1][1]
@@ -350,5 +351,5 @@ if __name__ == "__main__":
     #     print(dblp(cv, alpha=1.0e-8))
     #     print(dblp(cv, alpha=1.0e-8))
     #     print(str(cv))
-
+    logging.info('ending')
     pass

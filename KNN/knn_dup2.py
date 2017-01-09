@@ -77,7 +77,7 @@ class KNN(Model):
         for rec in records:
             tmp.insert(rec)
 
-    def split(self, train_count=40000, valid_count=5000, test_count=5000):
+    def split(self, train_count=40000, valid_count=5000, test_count=5000, dup=1):
         dblptmp = self.db.dblptmp
         train = self.db.train
         valid = self.db.valid
@@ -97,13 +97,19 @@ class KNN(Model):
         test_docs = docs[test_slice]
 
         for rec in train_docs:
-            train.save(rec)
+            rec.pop('_id', '')
+            for i in range(dup):
+                train.save(rec.copy())
 
         for rec in valid_docs:
-            valid.save(rec)
+            rec.pop('_id', '')
+            for i in range(dup):
+                valid.save(rec.copy())
 
         for rec in test_docs:
-            test.save(rec)
+            rec.pop('_id', '')
+            for i in range(dup):
+                test.save(rec.copy())
 
     def _extract(self, coll, attr):
         cur = coll.find()

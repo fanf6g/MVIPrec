@@ -169,5 +169,5 @@ if __name__ == "__main__":
     # cv21 = CountVectorizer(min_df=2, max_df=0.5, ngram_range=(1, 1), dtype='int16', stop_words='english')
     # cv22 = CountVectorizer(min_df=2, max_df=0.5, ngram_range=(1, 2), dtype='int16', stop_words='english')
 
-    print(restaurant(cv12, alpha=1.0))
+    print(restaurant(cv12, alpha=1.0e-8))
     print(str(cv12))

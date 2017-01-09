@@ -52,7 +52,7 @@ class KNN_restaurant(KNN):
         for rec in cur:
             sampledb.save(rec)
 
-    def shuffle_label(self, seed=17):
+    def shuffle_label(self, seed=1):
         dblp = self.db.sampledb
         tmp = self.db.dblptmp
 

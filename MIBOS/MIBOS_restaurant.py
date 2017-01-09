@@ -78,14 +78,17 @@ class MIBOS(Model):
         test = self.db.test
 
         train_city = self._extract(train, ADDR)
+        train_type = self._extract(train, TYPE)
         train_name = self._extract(train, NAME)
         train_lbl = self._extract(train, LBL)
 
         valid_city = self._extract(valid, ADDR)
+        valid_type = self._extract(valid, TYPE)
         valid_name = self._extract(valid, NAME)
         valid_label = self._extract(valid, LBL)
 
         test_city = self._extract(test, ADDR)
+        test_type = self._extract(test, TYPE)
         test_name = self._extract(test, NAME)
         test_label = self._extract(test, LBL)
 
@@ -99,6 +102,10 @@ class MIBOS(Model):
         names = []
         names.extend(train_name)
         names.extend(valid_name)
+
+        # types = []
+        # types.extend(train_type)
+        # types.extend(valid_type)
         # authors.extend(test_author)
 
         lbl = []
@@ -109,6 +116,7 @@ class MIBOS(Model):
         a_test_lbl = np.array(test_label)
 
         P_names = _Pk(names, test_name)
+        # P_types = _Pk(types, test_type)
 
         P_mul = P_names.multiply(P_cities)
         P_add = P_cities + P_names

@@ -60,7 +60,8 @@ class NB(Model):
         predictions = self.clf.predict(features)
         # return numpy.unique(predictions == labels, return_counts=True)
 
-        res = numpy.unique(numpy.array(predictions)[row_index] == numpy.array(labels)[row_index], return_counts=True)
+        # res = numpy.unique(numpy.array(predictions)[row_index] == numpy.array(labels)[row_index], return_counts=True)
+        res = numpy.unique(numpy.array(predictions) == numpy.array(labels), return_counts=True)
         return res
 
 

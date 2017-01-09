@@ -153,20 +153,20 @@ def restaurant(cv, tau, prec, q=1.0):
     db = client['restaurant']
     model = Collective_opt(db, cv=cv, tau=tau, prec=prec, q=q)
 
-    # type_train = model.extract(TRAIN, 'type')
+    type_train = model.extract(TRAIN, 'type')
     city_train = model.extract(TRAIN, 'addr')
     name_train = model.extract(TRAIN, 'name')
-    at_train = [str(a) + ' ' + str(d) for (a, d) in zip(city_train, name_train)]
+    at_train = [str(a) + ' ' + str(d) for (a, d, t) in zip(city_train, name_train, type_train)]
 
-    # type_valid = model.extract(VALID, 'type')
+    type_valid = model.extract(VALID, 'type')
     city_valid = model.extract(VALID, 'addr')
     name_valid = model.extract(VALID, 'name')
-    at_valid = [str(a) + ' ' + str(d) for (a, d) in zip(city_valid, name_valid)]
+    at_valid = [str(a) + ' ' + str(d) for (a, d, t) in zip(city_valid, name_valid, type_valid)]
 
-    # type_test = model.extract(TEST, 'type')
+    type_test = model.extract(TEST, 'type')
     city_test = model.extract(TEST, 'addr')
     name_test = model.extract(TEST, 'name')
-    at_test = [str(a) + ' ' + str(d) for (a, d) in zip(city_test, name_test)]
+    at_test = [str(a) + ' ' + str(d) for (a, d, t) in zip(city_test, name_test, type_test)]
 
     X_train, X_valid, X_test = model.featuring(at_train, at_valid, at_test)
     y_train = model.extract(TRAIN, 'lbl')
@@ -176,7 +176,7 @@ def restaurant(cv, tau, prec, q=1.0):
     model.training(X_train, y_train)
 
     # prec_range = np.arange(.8, .96, .05)
-    prec_range = np.arange(.65, .81, .05)
+    prec_range = np.arange(.0, .01, .05)
 
     q_range = np.arange(1.0, 3.1, 0.5)
     tau_range = np.arange(1, 6)

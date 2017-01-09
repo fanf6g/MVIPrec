@@ -172,11 +172,11 @@ def dblp(cv, tau, prec, q=1.0):
 
     model.training(X_train, y_train)
 
-    prec_range = np.arange(.85, .96, .05) + model.delta(45000, 2, 0.1)
+    prec_range = np.arange(.85, .86, .05) + model.delta(45000, 2, 0.1)
     # prec_range = np.arange(.2, .36, .05)+ model.delta(45000, 2, 0.1)
 
-    q_range = np.arange(1.0, 2.1, 0.5)
-    tau_range = np.arange(1, 6)
+    q_range = np.arange(1.0, 3.1, 0.2)
+    tau_range = np.arange(1.0, 10.1, 1)
 
     for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
         model._update(prec, q, tau)
@@ -291,8 +291,8 @@ if __name__ == "__main__":
     try:
         for (prec, q, tau) in itertools.product(prec_range, q_range, tau_range):
             print(prec, q, tau)
-            # res, res2 = dblp(cv12, tau=tau, prec=prec, q=q)
-            res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
+            res, res2 = dblp(cv12, tau=tau, prec=prec, q=q)
+            # res, res2 = movie(cv12, tau=tau, prec=prec, q=q)
             # res, res2 = restaurant(cv12, tau=tau, prec=prec, q=q)
             print('tau = {0}'.format(tau))
             nomatch = nomatch + res2[1][0]

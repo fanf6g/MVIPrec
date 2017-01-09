@@ -22,7 +22,7 @@ def dump(f_input, f_output):
         for line in f.readlines():
             cmds = line.split('\t')
             for cmd in cmds:
-                # print(cmd.strip())
+                # print(cmd.strip())zz
                 exec(cmd.strip())
                 # print(eval(cmd.strip()))
 
@@ -58,6 +58,6 @@ if __name__ == '__main__':
     # fout_list_ = ['journal1.csv', 'year1.csv', 'producer1.csv', 'genres1.csv', 'restaurant1.csv']
     # for (fin, fout) in zip(fin_list, fout_list_):
     #     dump(fin, fout)
-    print(delta(45000, 2, 0.9))
+    print(delta(720, 2, 0.1))
     # print(delta2(45000, 2, 0.1))
     pass
